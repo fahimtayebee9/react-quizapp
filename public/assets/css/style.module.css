@@ -469,7 +469,6 @@ body {
     font-size: 16px;
     font-family: "Lato", sans-serif;
     font-weight: 700;
-    color: #292929;
 }
 .timer-tt p {
     margin: 0;
@@ -479,12 +478,19 @@ body {
     margin-right: 15px !important;
 }
 .timer-tt {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
+    padding: 10px 20px;
+    border-radius: 10px;
     display: block;
     position: absolute;
-    top: 24%;
+    top: 33%;
     right: 5%;
     width: 18%;
+    background-color: #10003ca6;
+    color: white !important;
+    box-shadow: 0 0 8px 3px #2a00211c;
+    backdrop-filter: blur(14.5px);
+    -webkit-backdrop-filter: blur(14.5px);
 }
 
 /*=======================================================

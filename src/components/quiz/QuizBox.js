@@ -15,11 +15,59 @@ class QuizBox extends React.Component {
             result: 0,
             status: false,
             answers: [],
-            timePerQuestion: 30,
             prevIndex: null,
+            time: {},
+            seconds: 30,
         };
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
+        this.countDown = this.countDown.bind(this);
     }
 
+    secondsToTime(secs) {
+        let hours = Math.floor(secs / (60 * 60));
+
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+
+        let obj = {
+            h: hours,
+            m: minutes,
+            s: seconds,
+        };
+        return obj;
+    }
+
+    componentDidMount() {
+        let timeLeftVar = this.secondsToTime(this.state.seconds);
+        this.setState({ time: timeLeftVar });
+    }
+
+    startTimer() {
+        if (this.timer === 0 && this.state.seconds > 0) {
+            this.timer = setInterval(this.countDown, 1000);
+        }
+    }
+
+    countDown() {
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        this.setState({
+            time: this.secondsToTime(seconds),
+            seconds: seconds,
+        });
+
+        // Check if we're at zero.
+        if (seconds === 0) {
+            // clearInterval(this.timer);
+            this.handleNext();
+        }
+    }
+
+    // HANDLE NEXT BUTTON
     handleNext() {
         if (Data[this.state.currentActiveIndex].checked) {
             this.setState({
@@ -28,22 +76,25 @@ class QuizBox extends React.Component {
                         ? this.state.currentActiveIndex + 1
                         : 0,
                 status: this.state.currentActiveIndex === 9 ? true : false,
+                time: {},
+                seconds: 31,
             });
-
             console.log(this.state.answers);
         } else {
             alert("Please Answer This Question First...");
         }
     }
 
+    // HANDLE PREV BUTTON
     handleReset() {
         this.setState({
             currentActiveIndex: 0,
             result: 0,
             status: false,
             answers: [],
-            timePerQuestion: 30,
             prevIndex: null,
+            time: {},
+            seconds: 30,
         });
     }
 
@@ -83,18 +134,18 @@ class QuizBox extends React.Component {
                 </div>
             );
         } else {
+            this.startTimer();
             return (
                 <div className="content">
                     <div className="content-head">
-                        <Timer
-                            hr="00"
-                            min="00"
-                            sc={this.state.timePerQuestion}
-                        />
+                        {/* TIMER COMPONENT */}
+                        <Timer time={this.state.time} />
+
                         <div className="head-con">
                             {/* HEADER PART */}
                             <QuizBoxHeader
                                 questionCount={this.state.currentActiveIndex}
+                                showData={true}
                             />
 
                             {/* <!-- Question PROGRESS --> */}
